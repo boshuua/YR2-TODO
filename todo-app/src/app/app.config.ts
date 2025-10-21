@@ -3,11 +3,12 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop'; 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(), // Provides HttpClient for making API calls
-    importProvidersFrom(FormsModule) // Provides FormsModule for [(ngModel)]
+    provideHttpClient(),
+    importProvidersFrom(FormsModule, DragDropModule) 
   ]
 };
