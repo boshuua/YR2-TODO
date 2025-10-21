@@ -1,15 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
-import { AppComponent } from './app/app';
-import { importProvidersFrom } from '@angular/core'; // <-- Import this
-import { FormsModule } from '@angular/forms'; // <-- Import this
+import { AppComponent } from './app/app'; // <-- Changed 'App' to 'AppComponent'
 
-// We merge the shared config with the browser-only FormsModule
-bootstrapApplication(AppComponent, {
-  ...appConfig, 
-  providers: [
-    ...appConfig.providers, 
-    importProvidersFrom(FormsModule) // <-- Add FormsModule ONLY here
-  ]
-})
+bootstrapApplication(AppComponent, appConfig) // <-- Changed 'App' to 'AppComponent'
   .catch((err) => console.error(err));
