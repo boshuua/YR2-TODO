@@ -1,14 +1,14 @@
 <?php
 require_once 'db.php'; // Includes CORS headers
 
-// --- ADD THIS BLOCK ---
+
 // Handle preflight OPTIONS request for CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     // Headers are already set by db.php, just send OK status and exit.
     http_response_code(200); 
     exit();
 }
-// --- END OF BLOCK TO ADD --- 
+
 
 // Set the content type to JSON
 header('Content-Type: application/json');

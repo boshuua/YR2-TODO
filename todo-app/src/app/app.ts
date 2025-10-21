@@ -4,7 +4,6 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-// RouterOutlet has been removed from here
 
 // Define the structure of a To-Do item
 interface Todo {
@@ -17,7 +16,6 @@ interface Todo {
 @Component({
   selector: 'app-root',
   standalone: true,
-  // RouterOutlet has been removed from this imports array
   imports: [CommonModule, HttpClientModule, FormsModule],
   template: `
     <!-- Main container for the to-do application -->
@@ -124,8 +122,7 @@ export class AppComponent implements OnInit {
   http = inject(HttpClient);
 
   // Base URL for your PHP API.
-  // IMPORTANT: Make sure this points to the correct URL for your local server.
-  private apiUrl = 'http://localhost:8000/';
+  private apiUrl = 'https://ws369808-todo.remote.ac//api/';
 
   // State management using Angular Signals
   todos = signal<Todo[]>([]);

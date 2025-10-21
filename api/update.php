@@ -1,7 +1,7 @@
 <?php
 require_once 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Headers are already set by db.php, just send OK status and exit.
+    // just send OK status and exit.
     http_response_code(200); 
     exit();
 }
