@@ -1,154 +1,156 @@
-Full-Stack To-Do Application
+# Full-Stack To-Do Application
 
-This is a simple yet complete to-do list application built with a modern full-stack architecture.
+<p align="center">
+  <img src="https://placehold.co/600x300/111827/4F46E5?text=Angular+%2B+PHP+Todo+App" alt="Project Banner">
+</p>
 
-The application allows users to add, view, mark as complete, and delete tasks. All tasks are persisted in a PostgreSQL database.
+A simple yet complete to-do list application built with a modern full-stack architecture. The application allows users to add, view, mark as complete, and delete tasks, with all data persisted in a PostgreSQL database.
 
-Technology Stack
+---
 
-Frontend: Angular (Standalone Components)
+## ✨ Features
 
-Backend: PHP (using a simple REST API structure)
+-   **Create:** Add new tasks to your list.
+-   **Read:** View all your current tasks.
+-   **Update:** Mark tasks as complete or incomplete.
+-   **Delete:** Remove tasks from your list.
 
-Database: PostgreSQL
+---
 
-Styling: Tailwind CSS (via CDN for simplicity)
+## 🛠️ Technology Stack
 
-Prerequisites
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
+![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
-Before you begin, ensure you have the following installed on your system:
+* **Frontend:** Angular (Standalone Components)
+* **Backend:** PHP (Simple REST API)
+* **Database:** PostgreSQL
+* **Styling:** Tailwind CSS (via CDN for development)
 
-Node.js and npm: Required for the Angular frontend. You can download it from nodejs.org.
+---
 
-Angular CLI: The command-line interface for Angular. Install it globally after installing Node.js:
-
-npm install -g @angular/cli
-
-
-PHP: Required for the backend server. You can download it from php.net. Ensure the php command is available in your system's PATH.
-
-PostgreSQL: The database for storing tasks. You can download it from postgresql.org.
-
-Setup Guide
+## 🚀 Getting Started
 
 Follow these steps to get the application running locally.
 
-1. Database Setup (PostgreSQL)
+### ✅ Prerequisites
 
-First, you need to create the database, the user, and the table for the application.
+Before you begin, ensure you have the following installed on your system:
 
-Log in to PostgreSQL as a superuser (e.g., postgres):
+1.  **Node.js and npm:** Required for the Angular frontend. Download from [nodejs.org](https://nodejs.org/).
+2.  **Angular CLI:** The command-line interface for Angular. Install it globally:
+    ```bash
+    npm install -g @angular/cli
+    ```
+3.  **PHP:** Required for the backend server. Download from [php.net](https://www.php.net/). Ensure the `php` command is in your system's PATH.
+4.  **PostgreSQL:** The database for storing tasks. Download from [postgresql.org](https://www.postgresql.org/).
 
-psql -U postgres
+### 📦 Installation & Setup
 
+#### 1. Database Setup (PostgreSQL)
 
-Create the Database and User: Run the following SQL commands. Replace 'pass' with a secure password of your choice.
+First, create the database, user, and table.
 
--- Create the user 'dev' with a password
-CREATE USER dev WITH PASSWORD 'pass';
+1.  **Log in to PostgreSQL** as a superuser (e.g., `postgres`):
+    ```bash
+    psql -U postgres
+    ```
 
--- Create the database named 'TODOapp'
-CREATE DATABASE "TODOapp";
+2.  **Create the Database and User:** Run the following SQL commands. Replace `'pass'` with a secure password.
+    ```sql
+    -- Create the user 'dev' with a password
+    CREATE USER dev WITH PASSWORD 'pass';
 
--- Grant all privileges on the new database to your user
-GRANT ALL PRIVILEGES ON DATABASE "TODOapp" TO dev;
+    -- Create the database named 'TODOapp'
+    CREATE DATABASE "TODOapp";
 
+    -- Grant all privileges on the new database to your user
+    GRANT ALL PRIVILEGES ON DATABASE "TODOapp" TO dev;
+    ```
 
-Connect to the New Database:
+3.  **Connect to the New Database:**
+    ```sql
+    \c TODOapp
+    ```
 
-\c TODOapp
+4.  **Create the `todos` Table:** Paste this SQL into the `psql` shell.
+    ```sql
+    -- Create the 'todos' table
+    CREATE TABLE IF NOT EXISTS todos (
+        id SERIAL PRIMARY KEY,
+        task VARCHAR(255) NOT NULL,
+        is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
 
+    -- Grant permissions to the 'dev' user
+    GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE todos TO dev;
+    GRANT USAGE, SELECT ON SEQUENCE todos_id_seq TO dev;
+    ```
 
-Create the todos Table: Paste the following SQL into the psql shell and press Enter. This creates the table and grants the necessary permissions to your dev user.
+5.  Exit `psql` by typing `\q`.
 
--- Create the 'todos' table
-CREATE TABLE IF NOT EXISTS todos (
-    id SERIAL PRIMARY KEY,
-    task VARCHAR(255) NOT NULL,
-    is_completed BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+#### 2. Backend Setup (PHP)
 
--- Grant the 'dev' user permissions on the new table and its sequence
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE todos TO dev;
-GRANT USAGE, SELECT ON SEQUENCE todos_id_seq TO dev;
+1.  **Configure Database Connection:**
+    * Open `api/db.php`.
+    * Verify the credentials match your setup. **If you used a different password, update it here.**
+        ```php
+        // Inside api/db.php
+        $host = 'localhost';
+        $port = '5432';
+        $dbname = 'TODOapp';
+        $user = 'dev';
+        $password = 'pass'; // <-- Make sure this matches your password
+        ```
 
+2.  **Start the PHP Server:**
+    * In a terminal, navigate to the `api` directory:
+        ```bash
+        cd path/to/your/project/api
+        ```
+    * Start the PHP built-in server on port 8000:
+        ```bash
+        php -S localhost:8000
+        ```
+    * **Keep this terminal running.** You can test it by visiting `http://localhost:8000/get.php` in your browser.
 
-You can now exit psql by typing \q. Your database is ready.
+#### 3. Frontend Setup (Angular)
 
-2. Backend Setup (PHP)
+1.  **Install Dependencies:**
+    * Open a **new terminal** window.
+    * Navigate to the `todo-app` directory:
+        ```bash
+        cd path/to/your/project/todo-app
+        ```
+    * Install the Node.js packages:
+        ```bash
+        npm install
+        ```
 
-The backend is a set of PHP files located in the api/ directory.
+2.  **Configure API URL:**
+    * Open `todo-app/src/app/app.ts`.
+    * Ensure the `apiUrl` variable points to your running PHP server.
+        ```typescript
+        // Inside todo-app/src/app/app.ts
+        private apiUrl = 'http://localhost:8000/'; // <-- This must match your PHP server address
+        ```
 
-Configure Database Connection:
+---
 
-Open the api/db.php file.
+### ▶️ Running the Application
 
-Verify that the credentials ($host, $port, $dbname, $user, $password) match the ones you just set up. If you used a different password, update it here.
+With all setup complete, you can now run the full application.
 
-// Inside api/db.php
-$host = 'localhost';
-$port = '5432';
-$dbname = 'TODOapp';
-$user = 'dev';
-$password = 'pass'; // <-- Make sure this matches your password
+1.  **Start the Backend:** Make sure your PHP server terminal is still running.
+2.  **Start the Frontend:** In your second terminal (inside the `todo-app` directory), run the Angular development server:
+    ```bash
+    ng serve --open
+    ```
 
+Your browser will automatically open to `http://localhost:4200`, where you can use the application.
 
-Start the PHP Server:
+---
 
-Open a new terminal window.
-
-Navigate to the api directory:
-
-cd path/to/your/project/api
-
-
-Start the PHP built-in development server on port 8000:
-
-php -S localhost:8000
-
-
-Keep this terminal window open. It is now serving your backend API. You can test it by visiting http://localhost:8000/get.php in your browser; you should see an empty array [].
-
-3. Frontend Setup (Angular)
-
-The frontend is an Angular application located in the todo-app/ directory.
-
-Install Dependencies:
-
-Open a separate terminal window (do not close the PHP server one).
-
-Navigate to the todo-app directory:
-
-cd path/to/your/project/todo-app
-
-
-Install all the required Node.js packages:
-
-npm install
-
-
-Configure API URL:
-
-Open the todo-app/src/app/app.ts file.
-
-Ensure the apiUrl variable points to your running PHP server (including the port).
-
-// Inside todo-app/src/app/app.ts
-private apiUrl = 'http://localhost:8000/'; // <-- This must match your PHP server address
-
-
-Running the Application
-
-Once all setup steps are complete, you can run the full application.
-
-Start the Backend: Make sure the terminal running the PHP server (php -S localhost:8000) is still open and running in the api directory.
-
-Start the Frontend: In the second terminal (inside the todo-app directory), run the Angular development server:
-
-ng serve --open
-
-
-This command will build the Angular application and automatically open it in your default web browser, usually at http://localhost:4200.
-
-You should now see your fully functional To-Do application!
