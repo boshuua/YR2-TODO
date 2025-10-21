@@ -1,11 +1,12 @@
 @import 'dragula/dist/dragula.css';
 
-/* --- FIX: HIDE OUTER SCROLLBARS (REQUIRED) --- */
+/* --- FIX: ENFORCE FULL HEIGHT AND HIDE GLOBAL SCROLLBARS --- */
 html, body {
-  /* Hides the vertical scrollbar */
-  overflow-y: hidden;
-  /* Hides the horizontal scrollbar */
-  overflow-x: hidden; 
+  height: 100%; /* Force both to fill the viewport */
+  margin: 0;
+  padding: 0;
+  /* Hide the native scrollbars on modern browsers for a cleaner look */
+  overflow: hidden; 
 }
 /* ---------------------------------------------------- */
 
