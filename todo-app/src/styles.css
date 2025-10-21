@@ -1,1 +1,24 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'dragula/dist/dragula.css';
+
+/* --- FIX: HIDE OUTER SCROLLBARS (REQUIRED) --- */
+html, body {
+  /* Hides the vertical scrollbar */
+  overflow-y: hidden;
+  /* Hides the horizontal scrollbar */
+  overflow-x: hidden; 
+}
+/* ---------------------------------------------------- */
+
+/* Dragula fix (Keep this) */
+.gu-transit { 
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1) !important; 
+}
+.cdk-drag-placeholder {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1) !important; 
+}
+
+/* Custom checkbox style (Keep this) */
+.form-checkbox:checked {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}
