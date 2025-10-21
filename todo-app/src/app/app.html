@@ -1,12 +1,10 @@
-<!-- Main Trello-style Board Container -->
-<div class="bg-gray-900 min-h-screen p-6 font-sans text-white">
+<div class="bg-gray-900 p-6 font-sans text-white h-full"> 
   
   <header class="mb-6 text-center">
     <h1 class="text-5xl font-bold text-teal-400">Kanban Board Clone</h1>
     <p class="text-gray-400 mt-2">Angular + PHP + PostgreSQL</p>
   </header>
 
-  <!-- Error Message Display -->
   @if (errorMessage()) {
     <div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg mb-6" role="alert">
       <strong class="font-bold">Oops!</strong>
@@ -14,47 +12,36 @@
     </div>
   }
 
-  <!-- Loading State -->
   @if (loading()) {
     <div class="flex justify-center items-center p-12">
         <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-teal-400"></div>
     </div>
   }
 
-  <!-- Main Board Area (Horizontal Scrolling) -->
-  <!-- cdkDropListGroup wraps all columns to enable cross-list dragging -->
-  <div cdkDropListGroup class="flex flex-row space-x-4 overflow-x-auto min-h-[70vh]">
+  <div class="flex flex-row space-x-4 overflow-x-auto min-h-[70vh] bg-gray-800 p-4 rounded-xl shadow-inner">
 
-    <!-- Column Loop -->
     @for (list of board(); track list.list_id) {
       <div 
         class="flex flex-col bg-gray-700 rounded-xl shadow-2xl p-4 w-72 flex-shrink-0"
       >
-        <!-- Column Header -->
         <h2 class="text-xl font-semibold text-white mb-4 flex justify-between items-center">
           {{ list.list_name }} ({{ list.tasks.length }})
         </h2>
 
-        <!-- Task Drag/Drop Container (cdkDropList) -->
         <div 
-          cdkDropList 
-          [id]="list.list_id.toString()" 
-          [cdkDropListData]="list.tasks" 
-          (cdkDropListDropped)="drop($event)"
-          [cdkDropListConnectedTo]="board().map(l => l.list_id.toString())"
+          [dragula]="'kanban-board'"                     
+          [attr.id]="list.list_id"                       
           class="min-h-full flex-grow space-y-3"
         >
           
-          <!-- Task Card Loop -->
           @for (card of list.tasks; track card.id) {
             <div 
-              cdkDrag
-              class="bg-gray-800 text-white rounded-lg p-3 shadow-md border-b-2 border-gray-600 transition duration-200 hover:bg-gray-900/80 cursor-grab"
+              [attr.data-card-id]="card.id"              
+              class="bg-gray-800 text-white rounded-lg p-3 shadow-md border-b-2 border-gray-600 transition duration-200 hover:bg-gray-900/80 cursor-grab group relative"
               [class.opacity-50]="card.is_completed"
               [class.line-through]="card.is_completed"
             >
-              <div class="flex items-start justify-between">
-                <!-- Task Text -->
+              <div class="flex items-start justify-between pr-8">
                 <span 
                   class="text-sm flex-grow pr-2"
                   [class.text-gray-500]="card.is_completed"
@@ -62,7 +49,6 @@
                   {{ card.task }}
                 </span>
                 
-                <!-- Status Checkbox -->
                 <input 
                   type="checkbox"
                   [checked]="card.is_completed"
@@ -72,20 +58,19 @@
                 >
               </div>
               
-              <div class="flex justify-end pt-2">
-                <!-- Delete Button -->
+              <div class="absolute right-0 top-0 mt-1 mr-1 opacity-0 group-hover:opacity-100 transition-opacity"> 
                 <button 
                   (click)="deleteTodo(card.id)"
-                  class="text-gray-500 text-xs hover:text-red-500 transition duration-200 p-1 rounded hover:bg-gray-700"
+                  class="text-gray-500 hover:text-red-500 p-1 rounded hover:bg-gray-700"
                   aria-label="Delete task"
+                  title="Delete Card"
                 >
-                  Delete Card
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16"><path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/></svg>
                 </button>
               </div>
             </div>
           }
           
-          <!-- Placeholder for empty list -->
           @if (list.tasks.length === 0) {
             <div class="text-center text-gray-500 p-6 border border-dashed border-gray-600 rounded-lg">
               Drag cards here
@@ -96,7 +81,6 @@
       </div>
     }
 
-    <!-- Add Task/Card Input (Always attached to the first list) -->
     @if (board().length > 0) {
         <div class="flex flex-col bg-gray-700 rounded-xl p-4 w-72 flex-shrink-0 self-start shadow-2xl">
             <h2 class="text-xl font-semibold mb-4 text-gray-300">Add New Card</h2>

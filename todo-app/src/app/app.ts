@@ -4,25 +4,17 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
-import { 
-  CdkDragDrop, 
-  moveItemInArray, 
-  transferArrayItem,
-  DragDropModule 
-} from '@angular/cdk/drag-drop';
+import { DragulaService, DragulaModule } from 'ng2-dragula'; // <-- ADD DragulaModule HERE
 
 // --- DATA MODEL ---
-
-// Define the structure of a single To-Do item (now a 'Card')
 interface Card {
   id: number;
   task: string;
   is_completed: boolean;
   created_at: string;
-  list_id: number; // Foreign key linking the card to its column
+  list_id: number; 
 }
 
-// Define the structure of a List (Column)
 interface KanbanList {
   list_id: number;
   list_name: string;
@@ -33,36 +25,42 @@ interface KanbanList {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule, DragDropModule], 
+  // FIX: DragulaModule MUST be imported here for the directive to be recognized
+  imports: [CommonModule, HttpClientModule, FormsModule, DragulaModule], 
   templateUrl: './app.html', 
   styleUrl: './app.css'
 })
 export class AppComponent implements OnInit {
   
   http = inject(HttpClient);
-  // Ensure this URL is correct for your PHP server (e.g., http://localhost:8000/api/)
-  private apiUrl = 'http://localhost:8000/api/'; 
+  private dragulaService = inject(DragulaService); // <-- Dragula Service Injection
+  private apiUrl = 'http://localhost:8000/'; 
 
   board = signal<KanbanList[]>([]);
   newTaskText = '';
   loading = signal(true);
   errorMessage = signal<string | null>(null);
 
+  constructor() {
+    // Constructor handles Dragula setup and event subscription
+    this.dragulaService.createGroup('kanban-board', {
+      removeOnSpill: false
+    });
+
+    this.dragulaService.drop('kanban-board').subscribe(({ el, target, source }) => {
+      const cardId = Number(el.getAttribute('data-card-id'));
+      const targetListId = Number(target.id);
+      this.moveCardToServer(cardId, targetListId);
+    });
+  }
+
   ngOnInit() {
     this.getBoard();
   }
   
-  /**
-   * FIX: This method performs array mapping logic outside the template binding.
-   * It generates an array of all list IDs as strings for CDK cross-list connection.
-   */
-  getConnectedListIds(): string[] {
-    return this.board().map(list => list.list_id.toString());
-  }
-  // ------------------------------------------
-
-
-  // Fetch the entire structured board from the new board.php endpoint
+  // *** REST OF THE METHODS (getBoard, addTodo, moveCardToServer, etc.) REMAIN THE SAME ***
+  
+  // Fetch the entire structured board
   getBoard() {
     this.loading.set(true);
     this.errorMessage.set(null);
@@ -106,28 +104,6 @@ export class AppComponent implements OnInit {
           this.newTaskText = '';
         }
       });
-  }
-
-  // Handles drag-and-drop logic
-  drop(event: CdkDragDrop<Card[]>) {
-    const targetListId = Number(event.container.id);
-    
-    if (event.previousContainer === event.container) {
-      // Moving task within the same list
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      // Moving task to a different list (column transfer)
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-
-      // Server Update (Update list_id)
-      const movedCard = event.container.data[event.currentIndex];
-      this.moveCardToServer(movedCard.id, targetListId);
-    }
   }
 
   // API call to update a card's list_id
