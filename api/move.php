@@ -3,7 +3,7 @@ require_once 'db.php';
 
 header('Content-Type: application/json');
 
-// Handle OPTIONS request for CORS
+// Handle preflight OPTIONS request for CORS
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200); 
     exit();
@@ -28,7 +28,7 @@ if (isset($data['id']) && isset($data['list_id'])) {
             if ($stmt->rowCount() > 0) {
                 echo json_encode(['success' => true, 'message' => 'Task moved successfully.']);
             } else {
-                http_response_code(404); // Not Found
+                http_response_code(404);
                 echo json_encode(['error' => 'Task not found or no change made.']);
             }
         } catch (PDOException $e) {

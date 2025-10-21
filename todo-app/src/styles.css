@@ -1,1 +1,25 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'dragula/dist/dragula.css';
+
+/* --- FIX: ENFORCE FULL HEIGHT AND HIDE GLOBAL SCROLLBARS --- */
+html, body {
+  height: 100%; /* Force both to fill the viewport */
+  margin: 0;
+  padding: 0;
+  /* Hide the native scrollbars on modern browsers for a cleaner look */
+  overflow: hidden; 
+}
+/* ---------------------------------------------------- */
+
+/* Dragula fix (Keep this) */
+.gu-transit { 
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1) !important; 
+}
+.cdk-drag-placeholder {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1) !important; 
+}
+
+/* Custom checkbox style (Keep this) */
+.form-checkbox:checked {
+  background-color: #4299e1;
+  border-color: #4299e1;
+}

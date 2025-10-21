@@ -3,11 +3,13 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { DragulaModule } from 'ng2-dragula'; // <-- NEW: Import Dragula
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(), // Provides HttpClient for making API calls
-    importProvidersFrom(FormsModule) // Provides FormsModule for [(ngModel)]
+    provideHttpClient(),
+    // Replace the old module with DragulaModule
+    importProvidersFrom(FormsModule, DragulaModule.forRoot()) 
   ]
 };
