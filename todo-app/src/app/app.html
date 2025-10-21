@@ -1,0 +1,85 @@
+<div class="bg-gray-900 min-h-screen flex items-center justify-center font-sans text-white p-4">
+  <div class="w-full max-w-2xl bg-gray-800 rounded-2xl shadow-lg p-6 md:p-8">
+    
+    <header class="mb-6 md:mb-8 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-teal-400">TodoApp</h1>
+      <p class="text-gray-400 mt-2">Powered by Angular, PHP & PostgreSQL</p>
+    </header>
+
+    @if (errorMessage()) {
+      <div class="bg-red-500/20 border border-red-500 text-red-300 px-4 py-3 rounded-lg mb-6" role="alert">
+        <strong class="font-bold">Oops!</strong>
+        <span class="block sm:inline ml-2">{{ errorMessage() }}</span>
+      </div>
+    }
+
+    <form (ngSubmit)="addTodo()" class="flex flex-col sm:flex-row gap-3 mb-6">
+      <input 
+        type="text"
+        [(ngModel)]="newTask"
+        name="newTask"
+        placeholder="What needs to be done?"
+        class="flex-grow bg-gray-700 text-white placeholder-gray-500 rounded-lg px-4 py-3 border-2 border-gray-600 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+        required
+      >
+      <button 
+        type="submit"
+        [disabled]="!newTask.trim()"
+        class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-6 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+        </svg>
+        Add Task
+      </button>
+    </form>
+
+    <section>
+      @if (loading()) {
+        <div class="flex justify-center items-center p-8">
+            <div class="animate-spin rounded-full h-16 w-16 border-b-4 border-teal-400"></div>
+        </div>
+      }
+
+      @if (!loading() && todos().length === 0) {
+        <div class="text-center bg-gray-700/50 rounded-lg p-8">
+          <p class="text-gray-400">No tasks yet. Add one above to get started!</p>
+        </div>
+      }
+
+      <ul class="space-y-3">
+        @for (todo of todos(); track todo.id) {
+          <li 
+            class="flex items-center bg-gray-700 rounded-lg p-4 transition duration-300 hover:bg-gray-600/50"
+            [class.opacity-50]="todo.is_completed"
+          >
+            <input 
+              type="checkbox"
+              [checked]="todo.is_completed"
+              (change)="toggleComplete(todo)"
+              class="form-checkbox h-6 w-6 rounded-md bg-gray-800 border-gray-600 text-teal-500 focus:ring-teal-600 cursor-pointer"
+            >
+            <span 
+              class="ml-4 text-lg flex-grow"
+              [class.line-through]="todo.is_completed"
+              [class.text-gray-500]="todo.is_completed"
+            >
+              {{ todo.task }}
+            </span>
+            <button 
+              (click)="deleteTodo(todo.id)"
+              class="text-gray-500 hover:text-red-500 transition duration-200 p-2 rounded-full"
+              aria-label="Delete task"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm3.5-.029h.001l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm3.5-.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Z"/>
+              </svg>
+            </button>
+          </li>
+        }
+      </ul>
+    </section>
+  </div>
+</div>
+
+<router-outlet />
