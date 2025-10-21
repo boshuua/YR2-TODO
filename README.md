@@ -17,7 +17,7 @@ A simple yet complete to-do list application built with a modern full-stack arch
 
 ---
 
-## 🛠️ Technology Stack
+## 🛠️ Tech Stack
 
 ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 ![PHP](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
